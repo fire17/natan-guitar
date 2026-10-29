@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070a22">
+<title>גיטרה</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="brand">גיטרה</p>
+    <h1 id="title" class="title">בחירת שיר</h1>
+    <p id="artist" class="artist" hidden></p>
+  </header>
+
+  <section id="pick" class="card" aria-labelledby="pickH">
+    <h2 id="pickH" class="h">שיר לנגינה</h2>
+    <label class="btn primary file">
+      <input id="file" type="file" accept=".hsong,application/zip">
+      <span>פתיחת קובץ שיר (‎.hsong‎)</span>
+    </label>
+    <div id="folder" class="folder" hidden>
+      <h3 class="sub">שירים בתיקייה</h3>
+      <ul id="folderList" class="list"></ul>
+    </div>
+    <p id="pickMsg" class="msg" role="status" aria-live="polite"></p>
+  </section>
+
+  <section id="player" class="card" hidden aria-label="נגן">
+    <p id="meta" class="meta"></p>
+    <div class="transport">
+      <button id="play" class="play" type="button" aria-label="ניגון"><span aria-hidden="true">▶</span></button>
+      <div class="tl">
+        <input id="seek" type="range" min="0" max="1" step="0.1" value="0" aria-label="מיקום בשיר">
+        <div class="times"><output id="pos">0:00</output><output id="dur">0:00</output></div>
+      </div>
+    </div>
+    <div class="opts">
+      <button id="noGtr" class="chip" type="button" aria-pressed="false">בלי הגיטרה שבהקלטה</button>
+      <button id="other" class="chip" type="button">שיר אחר</button>
+    </div>
+    <p id="audioMsg" class="msg" role="status" aria-live="polite"></p>
+  </section>
+
+  <section id="gtrHost" class="gtr-host" hidden aria-label="גיטרה"></section>
+</main>
+<script src="guitar.js"></script>
+<script src="pack.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

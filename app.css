@@ -1,0 +1,65 @@
+/* Guitar — the app shell. Its own tokens (the fretboard's widget styles itself: guitar.js, .gtr). */
+:root {
+  --bg0: #070a22;
+  --bg1: #0c1238;
+  --card: rgba(255, 255, 255, 0.04);
+  --teal: #3fb8b0;
+  --teal-soft: #7fdccf;
+  --amber: #f2c46d;
+  --red: #ff8a8a;
+  --text: #e8ecff;
+  --muted: #9aa6d6;
+  --line: rgba(255, 255, 255, 0.10);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; overflow-x: hidden; }
+body {
+  min-height: 100vh;
+  font-family: "Heebo", system-ui, -apple-system, "Segoe UI", "Noto Sans Hebrew", sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg1), var(--bg0) 70%) fixed, var(--bg0);
+  -webkit-tap-highlight-color: transparent;
+}
+button, input { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, .file:focus-within { outline: 2px solid var(--teal-soft); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.wrap { max-width: 520px; margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 16px 40px; display: flex; flex-direction: column; gap: 12px; }
+.top { text-align: center; }
+.brand { margin: 0; font-size: 13px; letter-spacing: .08em; color: var(--teal-soft); opacity: .8; }
+.title { margin: 2px 0 0; font-size: 24px; line-height: 1.2; overflow-wrap: anywhere; }
+.artist { margin: 2px 0 0; font-size: 16px; color: var(--muted); overflow-wrap: anywhere; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.h { margin: 0; font-size: 17px; }
+.sub { margin: 4px 0 0; font-size: 14px; color: var(--muted); font-weight: 500; }
+.msg { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.4; overflow-wrap: anywhere; }
+.msg:empty { display: none; }
+.msg.err { color: var(--red); }
+
+.btn { min-height: 48px; display: flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 14px;
+  border: 1px solid var(--line); background: transparent; cursor: pointer; text-align: center; }
+.btn.primary { background: var(--teal); border-color: transparent; color: #04161a; font-weight: 600; }
+.file { position: relative; }
+.file input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.list button { width: 100%; min-height: 52px; padding: 6px 14px; border-radius: 14px; border: 1px solid var(--line); background: transparent;
+  text-align: start; cursor: pointer; display: flex; flex-direction: column; justify-content: center; }
+.list .t { font-size: 16px; overflow-wrap: anywhere; }
+.list .a { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+
+.meta { margin: 0; text-align: center; font-size: 15px; color: var(--teal-soft); }
+.transport { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.play { flex: none; width: 56px; height: 56px; border-radius: 50%; border: none; background: var(--teal); color: #04161a; font-size: 22px; cursor: pointer; }
+.play:disabled { opacity: .45; cursor: default; }
+.tl { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tl input { width: 100%; margin: 0; accent-color: var(--teal); min-height: 32px; }
+.times { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.times output { direction: ltr; unicode-bidi: isolate; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+
+.gtr-host { min-width: 0; }

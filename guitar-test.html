@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>גיטרה — בדיקה</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  /* harness only: tokens from app.css; this page adds a fake transport */
+  html, body { margin: 0; overflow-x: hidden; }
+  body { background: var(--bg0, #070a22); color: var(--text, #e8ecff); font-family: Heebo, system-ui, sans-serif; }
+  .wrap { max-width: 480px; margin: 0 auto; padding: 12px 16px 40px; display: flex; flex-direction: column; gap: 10px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .bar button { min-height: 44px; padding: 0 12px; border-radius: 14px; border: 1px solid var(--line, rgba(255,255,255,.1));
+    background: transparent; color: inherit; font: inherit; }
+  .bar output { font-variant-numeric: tabular-nums; color: var(--muted, #9aa6d6); margin-inline-start: auto; }
+  input[type=range] { width: 100%; }
+  h1 { font-size: 18px; margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>תצוגת גיטרה</h1>
+  <div class="bar">
+    <button id="play" type="button">▶ נגן</button>
+    <button id="dn" type="button" aria-label="טון למטה">−</button>
+    <button id="up" type="button" aria-label="טון למעלה">+</button>
+    <output id="info"></output>
+  </div>
+  <input id="seek" type="range" min="0" max="64" step="0.01" value="0" aria-label="מיקום">
+  <div id="gtrHost"></div>
+</div>
+<script src="guitar.js"></script>
+<script>
+  // a fake timeline: a C-minor progression (barre-heavy at capo 0, so the ranker suggests a capo), then a D-minor section
+  const prog = ['Cm', 'Ab', 'Eb', 'Bb', 'Fm', 'Ab', 'G', 'G', 'Cm', 'Eb', 'Ab', 'G', 'Dm', 'Bb', 'F', 'A'];
+  const chords = prog.map((label, i) => ({ t0: i * 4, t1: i * 4 + 3.8, label, unsure: i === 6 }));
+  const key = [{ t0: 0, t1: 48, key: 'C', mode: 'minor' }, { t0: 48, t1: 64, key: 'D', mode: 'minor' }];
+  const q = new URLSearchParams(location.search);
+  let t = +(q.get('t') || 2), semi = +(q.get('semi') || 0), playing = false, last = 0;
+  const store = { get: (k) => { try { return JSON.parse(sessionStorage.getItem(k)); } catch (e) { return null; } },
+                  set: (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+  const g = Guitar.mount(document.getElementById('gtrHost'), {
+    getTime: () => t, chords, key, semi, rtl: true, songId: 'test', store,
+    onChange: (ev) => console.log('guitar change', JSON.stringify(ev)),
+  });
+  if (q.get('capo') != null) g.setCapo(+q.get('capo'));
+  if (q.get('subs') != null) g.openSubs(+q.get('subs') || null);
+  const seek = document.getElementById('seek'), info = document.getElementById('info');
+  const show = () => { seek.value = t; info.textContent = t.toFixed(2) + ' שנ׳ · טון ' + (semi > 0 ? '+' : '') + semi; };
+  seek.addEventListener('input', () => { t = +seek.value; show(); });
+  document.getElementById('play').addEventListener('click', (e) => { playing = !playing; last = performance.now(); e.target.textContent = playing ? '⏸ עצור' : '▶ נגן'; });
+  const setSemi = (v) => { semi = Math.max(-6, Math.min(6, v)); g.update({ semi }); show(); };
+  document.getElementById('dn').addEventListener('click', () => setSemi(semi - 1));
+  document.getElementById('up').addEventListener('click', () => setSemi(semi + 1));
+  (function tick(now) { if (playing) { t = (t + (now - last) / 1000) % 64; last = now; show(); } requestAnimationFrame(tick); })(performance.now());
+  show();
+  window.__g = g;
+</script>
+</body>
+</html>
